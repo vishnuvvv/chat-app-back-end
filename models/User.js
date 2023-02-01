@@ -16,11 +16,8 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 6,
     },
-    pic: {
+    photo: {
       type: String,
-      required: true,
-      default:
-        "https://airnfts.s3.amazonaws.com/nft-images/20210909/Elon_Musk_1631224271078.png",
     },
   },
   {
