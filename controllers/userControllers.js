@@ -2,13 +2,15 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+
 export const userSignUp = async (req, res, next) => {
   let existingEmail;
-  const { name, email, password, photo } = req.body;
+  const { userName, email, password } = req.body;
+
 
   if (
-    !name &&
-    name.trim() === "" &&
+    !userName &&
+    userName.trim() === "" &&
     !email &&
     email.trim() === "" &&
     !password &&
@@ -30,11 +32,13 @@ export const userSignUp = async (req, res, next) => {
 
   const hashedPassword = bcrypt.hashSync(password);
 
+
+
   const user = new User({
-    name,
+    userName,
     email,
     password: hashedPassword,
-    photo
+    imageFile:req.file.path
   });
 
   try {
