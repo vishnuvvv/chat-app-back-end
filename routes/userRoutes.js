@@ -12,7 +12,13 @@ const upload = multer({storage : storage})
 
 
 userRouter.post("/signup",upload.single("imageFile"),userSignUp)
-userRouter.post("/",login)
+userRouter.post("/signin",login)
 
 export default userRouter;
+
+
+
+
+
+
 
