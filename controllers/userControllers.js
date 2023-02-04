@@ -2,7 +2,6 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-
 export const userSignUp = async (req, res, next) => {
   let existingEmail;
   const { userName, email, password } = req.body;
@@ -21,7 +20,7 @@ export const userSignUp = async (req, res, next) => {
 
 
   try {
-    existingEmail =  await User.findOne({ email });
+    existingEmail = await User.findOne({ email });
   } catch (error) {
     console.log(error);
   }
@@ -32,13 +31,12 @@ export const userSignUp = async (req, res, next) => {
 
   const hashedPassword = bcrypt.hashSync(password);
 
-
-
   const user = new User({
     userName,
     email,
     password: hashedPassword,
-    imageFile:req.file.path
+    imageFile: req.file.path,
+    ...req.body,
   });
 
   try {
@@ -61,7 +59,7 @@ export const login = async (req, res, next) => {
   let existingUser;
 
   try {
-    existingUser =  await User.findOne({ email });
+    existingUser = await User.findOne({ email });
   } catch (error) {
     console.log(error);
   }
@@ -72,14 +70,19 @@ export const login = async (req, res, next) => {
       .json({ message: "Unable to find the user from this id" });
   }
 
-  const isPasswordTrue = bcrypt.compareSync(password,(existingUser.password) );
+  const isPasswordTrue = bcrypt.compareSync(password, existingUser.password);
 
   if (!isPasswordTrue) {
     return res.status(400).json({ message: "Invalid Password" });
   }
 
-  const token = jwt.sign({id:existingUser._id},process.env.SECRET_KEY,{
-    expiresIn: "30d"
-  })
-  return res.status(200).json({ message: "Login is successful",token,id:existingUser._id });
+  const token = jwt.sign({ id: existingUser._id }, process.env.SECRET_KEY, {
+    expiresIn: "30d",
+  });
+  return res
+    .status(200)
+    .json({ message: "Login is successful", token, id: existingUser._id });
 };
+
+
+
